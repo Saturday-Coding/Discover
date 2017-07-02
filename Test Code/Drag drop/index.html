@@ -12,19 +12,31 @@
             overflow: hidden;
         }
     </style>
+    <link rel="stylesheet" href="styles.css" media="screen">
+    <link rel="stylesheet" href="../../css/font-awesome.css" media="screen">
+    <script src="../../libs/threeJs/three.js"></script>
+
+    <script src="../../libs/threeJs/controls/DragControls.js"></script>
+    <script src="../../libs/threeJs/controls/TrackballControls.js"></script>
 </head>
 <body>
 
-<script src="../../libs/threeJs/three.js"></script>
+<img src="images/add.png" onclick="menuClick()">
 
-<script src="../../libs/threeJs/controls/DragControls.js"></script>
-<script src="../../libs/threeJs/controls/TrackballControls.js"></script>
+<div id='cssmenu'>
+    <ul>
+        <li class='active'><a href="#" onclick="addCube()"><i class="fa fa-square" aria-hidden="true"></i></a></li>
+        <li><a href="#" onclick="addCircle()"><i class="fa fa-circle" aria-hidden="true"></i></a></li>
+    </ul>
+</div>
+
 
 <script>
 
     var container, stats;
     var camera, controls, scene, renderer;
     var objects = [];
+    var disp = false;
 
     init();
     animate();
@@ -129,7 +141,48 @@
 
     }
 
-</script>
+    function menuClick() {
+        if(! disp){
+            document.getElementById("cssmenu").style.display = "block";
+        }else {
+            document.getElementById("cssmenu").style.display = "none";
+        }
+        disp = ! disp;
+    }
 
+    function addShape(geometry) {
+        var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+
+        object.position.x = Math.random() * 1000 - 500;
+        object.position.y = Math.random() * 600 - 300;
+        object.position.z = Math.random() * 800 - 400;
+
+        object.rotation.x = Math.random() * 2 * Math.PI;
+        object.rotation.y = Math.random() * 2 * Math.PI;
+        object.rotation.z = Math.random() * 2 * Math.PI;
+
+        object.scale.x = Math.random() * 2 + 1;
+        object.scale.y = Math.random() * 2 + 1;
+        object.scale.z = Math.random() * 2 + 1;
+
+        object.castShadow = true;
+        object.receiveShadow = true;
+        scene.add( object );
+
+        objects.push( object );
+    }
+    
+    function addCircle() {
+        var geometry = new THREE.SphereGeometry( 50, 50, 50 );
+        addShape(geometry);
+
+    }
+
+    function addCube() {
+        var geometry = new THREE.BoxGeometry(50, 50, 50);
+        addShape(geometry);
+    }
+
+</script>
 </body>
 </html>
