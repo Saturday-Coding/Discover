@@ -4,7 +4,7 @@
   border-color: #94AA74;
   border-size: 1px;
   border-width: 1px;
-    display: none;
+  display: none;
 }
 #cssmenu ul {
   list-style: none;
@@ -38,8 +38,13 @@
   padding: 8px 0 0 10px;
 }
 
-img{
 
-    width: 5%;
-    height: 5%;
+#menu{
+  position: absolute;
+  z-index: 1;
+}
+
+img{
+  width: 20%;
+  height: 20%;
 }

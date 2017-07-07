@@ -18,17 +18,71 @@
 
     <script src="../../libs/threeJs/controls/DragControls.js"></script>
     <script src="../../libs/threeJs/controls/TrackballControls.js"></script>
+    <script src="../../libs/jquery-2.1.3.js"></script>
+
+    <script type="text/javascript">
+
+        var currentMousePos = { x: -1, y: -1 };
+        var currentShape = "";
+
+        $(document).ready(function(){
+
+            $(document).mousemove(function(event) {
+                currentMousePos.x = event.pageX;
+                currentMousePos.y = event.pageY;
+            });
+
+            $("#pluss").click(function () {
+                if(! disp){
+                    $('#cssmenu').fadeIn(500);
+                }else {
+                    $('#cssmenu').fadeOut(500);
+                }
+                disp = ! disp;
+            });
+
+            $("#cubeLink").click(function () {
+                currentShape = "cube";
+            });
+
+            $("#circleLink").click(function () {
+                currentShape = "circle";
+            });
+
+            $("#pointerLink").click(function () {
+                currentShape = null;
+            });
+
+            $("#playGround").click(function () {
+                if (currentShape === "cube"){
+                    addCube();
+                }else if (currentShape === "circle"){
+                    addCircle();
+                }
+
+            });
+
+        });
+
+    </script>
+
 </head>
 <body>
 
-<img src="images/add.png" onclick="menuClick()">
+<div id="menu">
 
-<div id='cssmenu'>
-    <ul>
-        <li class='active'><a href="#" onclick="addCube()"><i class="fa fa-square" aria-hidden="true"></i></a></li>
-        <li><a href="#" onclick="addCircle()"><i class="fa fa-circle" aria-hidden="true"></i></a></li>
-    </ul>
+    <img src="images/add.png" id="pluss">
+
+    <div id='cssmenu'>
+        <ul>
+            <li class='active'><a href="#" id="cubeLink"><i class="fa fa-square" aria-hidden="true"></i></a></li>
+            <li><a href="#" id="circleLink"><i class="fa fa-circle" aria-hidden="true"></i></a></li>
+            <li><a href="#" id="pointerLink"><i class="fa fa-mouse-pointer" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+
 </div>
+
 
 
 <script>
@@ -44,15 +98,16 @@
     function init() {
 
         container = document.createElement( 'div' );
+        container.setAttribute("id", "playGround");
         document.body.appendChild( container );
 
         camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
         camera.position.z = 1000;
 
         controls = new THREE.TrackballControls( camera );
-        controls.rotateSpeed = 1.0;
+        controls.rotateSpeed = 10.0;
         controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
+        controls.panSpeed = 1.0;
         controls.noZoom = false;
         controls.noPan = false;
         controls.staticMoving = true;
@@ -129,7 +184,6 @@
         requestAnimationFrame( animate );
 
         render();
-        stats.update();
 
     }
 
@@ -141,21 +195,12 @@
 
     }
 
-    function menuClick() {
-        if(! disp){
-            document.getElementById("cssmenu").style.display = "block";
-        }else {
-            document.getElementById("cssmenu").style.display = "none";
-        }
-        disp = ! disp;
-    }
-
     function addShape(geometry) {
         var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
 
-        object.position.x = Math.random() * 1000 - 500;
-        object.position.y = Math.random() * 600 - 300;
-        object.position.z = Math.random() * 800 - 400;
+        object.position.x = currentMousePos.y;
+        object.position.y = 0;
+        object.position.z = currentMousePos.x;
 
         object.rotation.x = Math.random() * 2 * Math.PI;
         object.rotation.y = Math.random() * 2 * Math.PI;
@@ -171,7 +216,7 @@
 
         objects.push( object );
     }
-    
+
     function addCircle() {
         var geometry = new THREE.SphereGeometry( 50, 50, 50 );
         addShape(geometry);
